@@ -204,8 +204,8 @@ impl<T: Real, const N: usize> IndexMut<usize> for Vector <T, N> {
     len
 */
 pub trait VectorOperation<T: Real, const N: usize>{
-    fn dot(&self, other: &Self) -> T;
-    fn cross(&self, other: &Self) -> Self;
+    fn dot(&self, other: Self) -> T;
+    fn cross(&self, other: Self) -> Self;
     fn len(&self) -> T;
 }
 
@@ -215,7 +215,7 @@ where
     T: std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>
      + std::ops::AddAssign + Default + Copy, 
 {
-    fn dot(&self, other: &Self) -> T {
+    fn dot(&self, other: Self) -> T {
         let mut ret: T = T::default();
         for i in 0..N {
             ret += self[i] * other[i];
@@ -224,7 +224,7 @@ where
         return ret;
     }
 
-    fn cross(&self, other: &Self) -> Self {
+    fn cross(&self, other: Self) -> Self {
         let mut ret: Vector<T, N> = Default::default();
         for i in 0..N {
             ret[i] = self[(i + 1) % N] * other[(i + 2) % N] - self[(i + 2) % N] * other[(i + 1) % N];
