@@ -4,6 +4,9 @@ mod matrix;
 use matrix::Matrix;
 use crate::matrix::MatrixProduct;
 
+mod framebuffer;
+use framebuffer::FrameBuffer;
+
 fn main() {
     let a : Vector<f32, 3> = Vector{ v : [1., 1., 4.] };
     let b : Vector<f32, 3> = Vector{ v : [5., 1., 4.] };
@@ -28,4 +31,10 @@ fn main() {
             println!( "| {:5} |   | {:5} |   | {:5} |", m[i], n[i], m.product(n)[i] );
         }
     }
+
+    let mut image = FrameBuffer::new(100, 100);
+
+    image.set_pixel(50, 50, Vector{ v : [255, 255, 255] });
+
+    image.write_image("test.png");
 }
