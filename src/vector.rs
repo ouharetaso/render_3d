@@ -180,6 +180,24 @@ macro_rules! defmulvec {
 defmulvec![f32, f64, i8, i16, i32, i64, u8, u16, u32, u64];
 
 
+impl <T: Num, const N: usize, U: Num> Div<U> for Vector <T, N>
+where 
+    T: std::ops::Add<Output = T> + Default + Copy,
+    U: Into<T> + Copy
+{
+    type Output = Self;
+
+    fn div(self, other: U) -> Self::Output {
+        let mut ret: Vector<T, N> = Default::default();
+        for i in 0..N {
+            ret[i] = self[i] / Into::<T>::into(other);
+        }
+
+        return ret;
+    }
+}
+    
+
 impl<T: Num, const N: usize> Index<usize> for Vector <T, N> {
     type Output = T;
 
