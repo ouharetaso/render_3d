@@ -27,18 +27,17 @@ where
     T: std::fmt::Display
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut formatted = String::from("[");
+        write!(f, "[")?;
         for i in 0..N {
-            formatted.push_str(&self[i].to_string());
+            self.v[i].fmt(f)?;
             if i < N-1 {
-                formatted.push_str(", ");
+                write!(f, ", ")?;
             }
             else{
                 ()
             }
         }
-        formatted.push_str("]");
-        write!(f, "{}", formatted)
+        write!(f, "]")
     }
 }
 

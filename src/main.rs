@@ -22,10 +22,10 @@ fn main() {
     println!("{} * {} = {}", 4, b, 4 * b);
     for i in 0..3 {
         if i == 1 {
-            println!( "| {} |   | {} | = | {} |", m[i], n[i], m.product(n)[i] );
+            println!( "| {:5} |   | {:5} | = | {:5} |", m[i], n[i], m.product(n)[i] );
         }
         else {
-            println!( "| {} |   | {} |   | {} |", m[i], n[i], m.product(n)[i] );
+            println!( "| {:5} |   | {:5} |   | {:5} |", m[i], n[i], m.product(n)[i] );
         }
     }
 }
