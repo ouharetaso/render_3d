@@ -1,16 +1,17 @@
 use std::ops::*;
 use std::fmt;
+use num_traits::Num;
 use num_traits::real::Real;
 use num_traits::cast::NumCast;
 
 
 #[derive(Debug, Copy, Clone)]
-pub struct Vector <T: Real, const N: usize> {
+pub struct Vector <T: Num, const N: usize> {
     pub v : [T; N],    
 }
 
 
-impl<T: Real, const N: usize> Default for Vector <T, N>
+impl<T: Num, const N: usize> Default for Vector <T, N>
 where
     T: Default + Copy,
 {
@@ -22,7 +23,7 @@ where
 }
 
 
-impl<T: Real, const N: usize> std::fmt::Display for Vector <T, N>
+impl<T: Num, const N: usize> std::fmt::Display for Vector <T, N>
 where
     T: std::fmt::Display
 {
@@ -55,9 +56,9 @@ where
     IndexMut
 */
 
-impl <T: Real, const N: usize> Neg for Vector <T, N>
+impl <T: Num, const N: usize> Neg for Vector <T, N>
 where 
-    T: std::ops::Neg<Output = T> + Default
+    T: std::ops::Neg<Output = T> + Default + Copy
 {
     type Output = Self;
 
@@ -72,9 +73,9 @@ where
 }
 
 
-impl <T: Real, const N: usize> Add for Vector <T, N>
+impl <T: Num, const N: usize> Add for Vector <T, N>
 where 
-    T: std::ops::Add<Output = T> + Default
+    T: std::ops::Add<Output = T> + Default + Copy
 {
     type Output = Self;
 
@@ -89,9 +90,9 @@ where
 }
 
 
-impl <T: Real, const N: usize> AddAssign for Vector <T, N>
+impl <T: Num, const N: usize> AddAssign for Vector <T, N>
 where 
-    T: std::ops::AddAssign
+    T: std::ops::AddAssign + Copy
 {
     fn add_assign(&mut self, other: Self) {
         for i in 0..N {
@@ -101,9 +102,9 @@ where
 }
 
 
-impl <T: Real, const N: usize> Sub for Vector <T, N>
+impl <T: Num, const N: usize> Sub for Vector <T, N>
 where 
-    T: std::ops::Sub<Output = T> + Default
+    T: std::ops::Sub<Output = T> + Default + Copy
 {
     type Output = Self;
 
@@ -118,9 +119,9 @@ where
 }
 
 
-impl <T: Real, const N: usize> SubAssign for Vector <T, N>
+impl <T: Num, const N: usize> SubAssign for Vector <T, N>
 where 
-    T: std::ops::SubAssign
+    T: std::ops::SubAssign + Copy
 {
     fn sub_assign(&mut self, other: Self) {
         for i in 0..N {
@@ -130,10 +131,10 @@ where
 }
 
 
-impl <T: Real, const N: usize, U: Real> Mul<U> for Vector <T, N>
+impl <T: Num, const N: usize, U: Num> Mul<U> for Vector <T, N>
 where 
-    T: std::ops::Mul<Output = T> + Default,
-    U: Into<T>
+    T: std::ops::Mul<Output = T> + Default + Copy,
+    U: Into<T> + Copy
 {
     type Output = Self;
 
@@ -151,9 +152,9 @@ where
 macro_rules! defmulvec {
     ($($t: ty), *) => {
         $(
-            impl<T: Real, const N: usize> Mul<Vector<T, N>> for $t
+            impl<T: Num, const N: usize> Mul<Vector<T, N>> for $t
             where 
-                T: std::ops::Mul<Output = T> + Default + NumCast
+                T: std::ops::Mul<Output = T> + Default + NumCast + Copy
             {   
                 type Output = Vector<T, N>;
                 fn mul(self, other: Vector<T, N>) -> Self::Output{
@@ -179,7 +180,7 @@ macro_rules! defmulvec {
 defmulvec![f32, f64, i8, i16, i32, i64, u8, u16, u32, u64];
 
 
-impl<T: Real, const N: usize> Index<usize> for Vector <T, N> {
+impl<T: Num, const N: usize> Index<usize> for Vector <T, N> {
     type Output = T;
 
     fn index(&self, index: usize) -> &T {
@@ -188,7 +189,7 @@ impl<T: Real, const N: usize> Index<usize> for Vector <T, N> {
 }
 
 
-impl<T: Real, const N: usize> IndexMut<usize> for Vector <T, N> {
+impl<T: Num, const N: usize> IndexMut<usize> for Vector <T, N> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output{
         &mut self.v[index]
     }
@@ -202,14 +203,14 @@ impl<T: Real, const N: usize> IndexMut<usize> for Vector <T, N> {
     cross
     len
 */
-pub trait VectorOperation<T: Real, const N: usize>{
+pub trait VectorOperation<T: Num, const N: usize>{
     fn dot(&self, other: Self) -> T;
     fn cross(&self, other: Self) -> Self;
     fn len(&self) -> T;
 }
 
 
-impl <T: Real, const N: usize> VectorOperation<T, N> for Vector<T, N>
+impl <T: Num + Real, const N: usize> VectorOperation<T, N> for Vector<T, N>
 where
     T: std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>
      + std::ops::AddAssign + Default + Copy, 

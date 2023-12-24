@@ -1,15 +1,15 @@
 use std::ops::*;
-use num_traits::real::Real;
+use num_traits::Num;
 
 use crate::Vector;
 
 #[derive(Debug, Copy, Clone)]
-pub struct Matrix <T: Real, const N: usize> {
+pub struct Matrix <T: Num, const N: usize> {
     pub m : [Vector<T, N>; N]
 }
 
 
-impl<T: Real, const N: usize> Default for Matrix <T, N>
+impl<T: Num, const N: usize> Default for Matrix <T, N>
 where
     T: Default + Copy,
 {
@@ -21,7 +21,7 @@ where
 }
 
 
-impl<T: Real, const N: usize> Index<usize> for Matrix <T, N> {
+impl<T: Num, const N: usize> Index<usize> for Matrix <T, N> {
     type Output = Vector<T, N>;
 
     fn index(&self, index: usize) -> &Self::Output {
@@ -30,21 +30,21 @@ impl<T: Real, const N: usize> Index<usize> for Matrix <T, N> {
 }
 
 
-impl<T: Real, const N: usize> IndexMut<usize> for Matrix <T, N> {
+impl<T: Num, const N: usize> IndexMut<usize> for Matrix <T, N> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output{
         &mut self.m[index]
     }
 }
 
 
-pub trait MatrixProduct<T: Real, const N: usize> {
+pub trait MatrixProduct<T: Num, const N: usize> {
     fn product(&self, other: Matrix<T, N>) -> Self;
 }
 
 
-impl<T: Real, const N: usize> MatrixProduct<T, N> for Matrix<T, N>
+impl<T: Num, const N: usize> MatrixProduct<T, N> for Matrix<T, N>
 where
-    T: Default + std::ops::AddAssign
+    T: Default + std::ops::AddAssign + Copy
 {
     fn product(&self, other: Matrix<T, N>) -> Matrix<T, N> {
         let mut ret: Matrix<T, N> = Default::default();
@@ -60,9 +60,9 @@ where
 }
 
 
-impl<T: Real, const N: usize> MatrixProduct<T, N> for Vector<T, N>
+impl<T: Num, const N: usize> MatrixProduct<T, N> for Vector<T, N>
 where
-    T: Default + std::ops::AddAssign
+    T: Default + std::ops::AddAssign + Copy
 {
     fn product(&self, other: Matrix<T, N>) -> Self {
         let mut ret: Vector<T, N> = Default::default();
@@ -76,14 +76,14 @@ where
 }
 
 
-pub trait VectorProduct<T: Real, const N: usize> {
+pub trait VectorProduct<T: Num, const N: usize> {
     fn product(&self, other: Vector<T, N>) -> Vector<T, N>;
 }
 
 
-impl<T: Real, const N: usize> VectorProduct<T, N> for Matrix<T, N>
+impl<T: Num, const N: usize> VectorProduct<T, N> for Matrix<T, N>
 where
-    T: Default + std::ops::AddAssign
+    T: Default + std::ops::AddAssign + Copy
 {
     fn product(&self, other: Vector<T, N>) -> Vector<T, N> {
         let mut ret: Vector<T, N> = Default::default();
