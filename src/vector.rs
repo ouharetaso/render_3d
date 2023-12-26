@@ -11,6 +11,10 @@ pub struct Vector <T: Num, const N: usize> {
 }
 
 
+pub trait VecTrait<T: Num, const N: usize>{}
+impl<T: Num, const N: usize> VecTrait<T, N> for Vector <T, N>{}
+
+
 impl<T: Num, const N: usize> Default for Vector <T, N>
 where
     T: Default + Copy,

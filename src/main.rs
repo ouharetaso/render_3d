@@ -4,9 +4,12 @@ mod vector;
 use vector::Vector;
 mod matrix;
 use matrix::Matrix;
-use crate::matrix::MatrixProduct;
+//use crate::matrix::MatrixProduct;
+//use crate::matrix::VectorProduct;
 
 mod transform;
+
+mod homogeneous;
 
 mod framebuffer;
 use framebuffer::FrameBuffer;
@@ -29,12 +32,14 @@ fn main() {
     println!("{} * {} = {}", 4, b, 4 * b);
     for i in 0..3 {
         if i == 1 {
-            println!( "| {:5} |   | {:5} | = | {:5} |", m[i], n[i], m.product(n)[i] );
+            println!( "| {:5} |   | {:5} | = | {:5} |", m[i], n[i], m.prod_mat(n)[i] );
         }
         else {
-            println!( "| {:5} |   | {:5} |   | {:5} |", m[i], n[i], m.product(n)[i] );
+            println!( "| {:5} |   | {:5} |   | {:5} |", m[i], n[i], m.prod_mat(n)[i] );
         }
     }
+
+    println!("{}", m.prod_vec(a));
 
     let mut image = FrameBuffer::new(100, 100);
 

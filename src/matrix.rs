@@ -9,6 +9,10 @@ pub struct Matrix <T: Num, const N: usize> {
 }
 
 
+trait MatTrait{}
+impl<T: Num, const N: usize> MatTrait for Matrix<T, N>{}
+
+
 impl<T: Num, const N: usize> Default for Matrix <T, N>
 where
     T: Default + Copy,
@@ -50,7 +54,67 @@ where
         }
         return ret;
     }
+
+    pub fn identity() -> Matrix<T, N> {
+        let mut ret: Matrix<T, N> = Default::default();
+        for i in 0..N {
+            ret[i][i] = T::one();
+        }
+        return ret;
+    }
 }
+
+
+impl<T: Num, const N: usize> Matrix<T, N>
+where
+    T: Default + Copy
+{
+    pub fn prod_vec(&self, v: Vector<T, N>) -> Vector<T, N> {
+        let mut ret: Vector<T, N> = Default::default();
+        for i in 0..N {
+            for j in 0..N {
+                ret[i] = ret[i] + self[i][j] * v[j];
+            }
+        }
+        return ret;
+    }
+
+    pub fn prod_mat(&self, m: Matrix<T, N>) -> Matrix<T, N> {
+        let mut ret: Matrix<T, N> = Default::default();
+        for i in 0..N {
+            for j in 0..N {
+                for k in 0..N {
+                    ret[i][j] = ret[i][j] + self[i][k] * m[k][j];
+                }
+            }
+        }
+        return ret;
+    }
+}
+
+/*
+pub trait MatrixProduct<T: Num, U: VecTrait, const N: usize> {
+    fn product(&self, other: U) -> Self;
+}
+
+
+impl<T: Num, U: VecTrait, const N: usize> MatrixProduct<T, U, N> for Matrix<T, N>
+where
+    T: Default + Copy
+{
+    fn product(&self, other: U) -> Matrix<T, N> {
+        let mut ret: Matrix<T, N> = Default::default();
+        for i in 0..N {
+            for j in 0..N {
+                for k in 0..N {
+                    ret[i][j] = ret[i][j] + self[i][k] * other[k][j];
+                }
+            }
+        }
+        return ret;
+    }
+}
+
 
 
 pub trait MatrixProduct<T: Num, const N: usize> {
@@ -60,31 +124,15 @@ pub trait MatrixProduct<T: Num, const N: usize> {
 
 impl<T: Num, const N: usize> MatrixProduct<T, N> for Matrix<T, N>
 where
-    T: Default + std::ops::AddAssign + Copy
+    T: Default + Copy
 {
     fn product(&self, other: Matrix<T, N>) -> Matrix<T, N> {
         let mut ret: Matrix<T, N> = Default::default();
         for i in 0..N {
             for j in 0..N {
                 for k in 0..N {
-                    ret[i][j] += self[i][k] * other[k][j];
+                    ret[i][j] = ret[i][j] + self[i][k] * other[k][j];
                 }
-            }
-        }
-        return ret;
-    }
-}
-
-
-impl<T: Num, const N: usize> MatrixProduct<T, N> for Vector<T, N>
-where
-    T: Default + std::ops::AddAssign + Copy
-{
-    fn product(&self, other: Matrix<T, N>) -> Self {
-        let mut ret: Vector<T, N> = Default::default();
-        for i in 0..N {
-            for j in 0..N {
-                ret[i] += self[j] * other[j][i];
             }
         }
         return ret;
@@ -99,15 +147,16 @@ pub trait VectorProduct<T: Num, const N: usize> {
 
 impl<T: Num, const N: usize> VectorProduct<T, N> for Matrix<T, N>
 where
-    T: Default + std::ops::AddAssign + Copy
+    T: Default + Copy
 {
     fn product(&self, other: Vector<T, N>) -> Vector<T, N> {
         let mut ret: Vector<T, N> = Default::default();
         for i in 0..N {
             for j in 0..N {
-                ret[i] += self[i][j] * other[j];
+                ret[i] = ret[i] + self[i][j] * other[j];
             }
         }
         return ret;
     }
 }
+*/
