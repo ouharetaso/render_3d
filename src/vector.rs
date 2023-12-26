@@ -17,7 +17,7 @@ where
 {
     fn default() -> Self {
         Vector {
-            v: [T::default(); N],
+            v: [T::zero(); N],
         }
     }
 }
