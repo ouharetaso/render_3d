@@ -37,7 +37,10 @@ impl<T: Num, const N: usize> IndexMut<usize> for Matrix <T, N> {
 }
 
 
-impl<T: Num, const N: usize> Matrix<T, N> {
+impl<T: Num, const N: usize> Matrix<T, N>
+where
+    T: Default + Copy,
+{
     pub fn transpose(&self) -> Matrix<T, N> {
         let mut ret: Matrix<T, N> = Default::default();
         for i in 0..N {
