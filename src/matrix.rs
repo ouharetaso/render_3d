@@ -37,6 +37,19 @@ impl<T: Num, const N: usize> IndexMut<usize> for Matrix <T, N> {
 }
 
 
+impl<T: Num, const N: usize> Matrix<T, N> {
+    pub fn transpose(&self) -> Matrix<T, N> {
+        let mut ret: Matrix<T, N> = Default::default();
+        for i in 0..N {
+            for j in 0..N {
+                ret[i][j] = self[j][i];
+            }
+        }
+        return ret;
+    }
+}
+
+
 pub trait MatrixProduct<T: Num, const N: usize> {
     fn product(&self, other: Matrix<T, N>) -> Self;
 }
